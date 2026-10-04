@@ -23,3 +23,35 @@ h1{margin:0 0 6px;font-size:25px;letter-spacing:-.3px}.bio{margin:0;font-size:14
 .loading,.error{color:var(--muted);text-align:center;padding:28px 10px}.error{color:#bbb}.error span{display:inline-block;margin-top:6px;color:#777;font-size:12px}footer{margin-top:36px;text-align:center;color:#555;font-size:12px}
 @media(max-width:520px){.page{width:min(100% - 16px,760px);padding-top:22px}.grid{gap:8px}.card-body{padding:9px}.card-actions{grid-template-columns:1fr}.reaction{flex:1 1 calc(50% - 9px)}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* =========================================
+   INTENSEDEBATE - SIMPLE GUEST COMMENT FORM
+   Hide email + website fields
+   ========================================= */
+
+/* Hide email field */
+#IDCommentNewThreadEmail,
+#IDCommentNewThreadEmailLabel,
+input[name="email"],
+label[for="IDCommentNewThreadEmail"] {
+  display: none !important;
+}
+
+/* Hide website / URL field */
+#IDCommentNewThreadURL,
+#IDCommentNewThreadURLLabel,
+input[name="url"],
+input[name="website"],
+label[for="IDCommentNewThreadURL"] {
+  display: none !important;
+}
+
+/* Hide surrounding rows/containers if IntenseDebate wraps them */
+#IDCommentNewThreadEmailContainer,
+#IDCommentNewThreadURLContainer,
+.idc-email,
+.idc-url,
+.idc-website {
+  display: none !important;
+}
+
