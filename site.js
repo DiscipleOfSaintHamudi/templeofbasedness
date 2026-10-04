@@ -116,7 +116,7 @@ function updatePageMeta(edit) {
     return;
   }
 
-  const title = `${getEditTitle(edit)} — ${handle}`;
+  const title = `${getEditTitle(edit)} â€” ${handle}`;
   const description = edit.description || `${getEditTitle(edit)} by ${handle}`;
   const url = canonicalEditURL(edit.id);
   document.title = title;
@@ -152,7 +152,7 @@ async function loadEdits() {
 
 /* ---------- media helpers ---------- */
 function mediaErrorMarkup(message = "Video unavailable") {
-  return `<div class="media-error" role="status"><span>⚠</span>${escapeHTML(message)}</div>`;
+  return `<div class="media-error" role="status"><span>âš </span>${escapeHTML(message)}</div>`;
 }
 
 function bindMediaErrors(root = document) {
@@ -198,7 +198,7 @@ function renderHome() {
       <article class="card">
         <a class="card-media" href="${escapeHTML(href)}" aria-label="Open ${escapeHTML(title)}">
           ${poster}
-          <span class="card-overlay" aria-hidden="true">▶</span>
+          <span class="card-overlay" aria-hidden="true">â–¶</span>
         </a>
         <div class="card-body">
           <div class="card-title">${escapeHTML(title)}</div>
@@ -232,7 +232,7 @@ function renderEdit(edit) {
   updatePageMeta(edit);
 
   app.innerHTML = `
-    <a class="back" href="${escapeHTML(homeHref())}">← Back to edits</a>
+    <a class="back" href="${escapeHTML(homeHref())}">â† Back to edits</a>
 
     <article class="edit-card">
       <div class="edit-media">
@@ -244,8 +244,8 @@ function renderEdit(edit) {
       <div class="edit-info">
         <h2 class="edit-title">${escapeHTML(title)}</h2>
         <div class="edit-meta">${escapeHTML(getEditMeta(edit, editIndex))}</div>
-        <div class="stats" aria-label="View count"><span class="view-icon" aria-hidden="true">👁</span><span id="view-count">—</span></div>
-        <a class="download" href="${escapeHTML(file)}" download="${escapeHTML(getDownloadName(edit))}">↓ Download MP4</a>
+        <div class="stats" aria-label="View count"><span class="view-icon" aria-hidden="true">ðŸ‘</span><span id="view-count">â€”</span></div>
+        <a class="download" href="${escapeHTML(file)}" download="${escapeHTML(getDownloadName(edit))}">â†“ Download MP4</a>
       </div>
     </article>
 
@@ -265,7 +265,7 @@ function renderEdit(edit) {
     ${commentsEnabled ? `
       <section class="section comments-section" id="comments-section">
         <h2>Comments</h2>
-        <div class="comments-loading" id="comments-placeholder">loading comments…</div>
+        <div class="comments-loading" id="comments-placeholder">loading commentsâ€¦</div>
         <span id="IDCommentsPostTitle" style="display:none"></span>
       </section>` : ""}
   `;
@@ -289,22 +289,61 @@ function goatCounterOrigin() {
   }
 }
 
-async function fetchGoatCounterCount(path) {
-  const origin = goatCounterOrigin();
-  if (!origin) throw new Error("GoatCounter URL is not configured");
-  const url = `${origin}/counter/${encodeURIComponent(path)}.json`;
-  const response = await fetch(url, { mode: "cors", cache: "no-store" });
-  if (response.status === 404) return "0";
-  if (!response.ok) throw new Error(`GoatCounter counter returned ${response.status}`);
-  const data = await response.json();
-  if (!data || typeof data.count !== "string") throw new Error("Unexpected GoatCounter response");
-  return data.count;
+function fetchGoatCounterCount(path) {
+  return new Promise((resolve, reject) => {
+    const origin = goatCounterOrigin();
+
+    if (!origin) {
+      reject(new Error("GoatCounter URL is not configured"));
+      return;
+    }
+
+    const url = `${origin}/counter/${encodeURIComponent(path)}.json`;
+    const xhr = new XMLHttpRequest();
+
+    xhr.open("GET", url, true);
+    xhr.timeout = 8000;
+
+    xhr.onload = function () {
+      if (xhr.status === 404) {
+        resolve("0");
+        return;
+      }
+
+      if (xhr.status < 200 || xhr.status >= 300) {
+        reject(new Error(`GoatCounter counter returned ${xhr.status}`));
+        return;
+      }
+
+      try {
+        const data = JSON.parse(xhr.responseText);
+
+        if (!data || typeof data.count !== "string") {
+          throw new Error("Unexpected GoatCounter response");
+        }
+
+        resolve(data.count);
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    xhr.onerror = function () {
+      reject(new Error("GoatCounter network request failed"));
+    };
+
+    xhr.ontimeout = function () {
+      reject(new Error("GoatCounter request timed out"));
+    };
+
+    xhr.send();
+  });
 }
 
 async function initVisibleViews(edit) {
   const holder = document.getElementById("view-count");
   if (!holder) return;
-  holder.textContent = "…";
+  holder.textContent = "â€¦";
 
   // Give count.js a moment to record this pageview before reading the public counter.
   await new Promise(resolve => setTimeout(resolve, 900));
@@ -314,7 +353,7 @@ async function initVisibleViews(edit) {
     holder.textContent = `${count} ${count === "1" ? "view" : "views"}`;
   } catch (error) {
     console.warn("Visible GoatCounter count unavailable:", error);
-    holder.textContent = "views tracked";
+    holder.textContent = "— views";
   }
 }
 
@@ -531,7 +570,7 @@ function renderEmojiFallback(picker) {
     <div class="emoji-fallback">
       <label for="emoji-fallback-input">Paste any Unicode emoji</label>
       <div class="emoji-fallback-row">
-        <input id="emoji-fallback-input" type="text" inputmode="text" maxlength="40" autocomplete="off" placeholder="🦅">
+        <input id="emoji-fallback-input" type="text" inputmode="text" maxlength="40" autocomplete="off" placeholder="ðŸ¦…">
         <button id="emoji-fallback-submit" type="button">Add</button>
       </div>
     </div>`;
@@ -561,7 +600,7 @@ async function openReactionPicker() {
   add.setAttribute("aria-expanded", "true");
 
   if (picker.querySelector("emoji-picker, .emoji-fallback")) return;
-  picker.innerHTML = `<div class="picker-loading">loading emoji picker…</div>`;
+  picker.innerHTML = `<div class="picker-loading">loading emoji pickerâ€¦</div>`;
 
   const loaded = await ensureEmojiPickerModule();
   if (!loaded) {
@@ -742,8 +781,8 @@ async function boot() {
 
     const edit = EDITS.find(item => item.id === requestedId);
     if (!edit) {
-      document.title = `Edit not found — ${CONFIG.handle || "@itneverbegunn"}`;
-      app.innerHTML = `<div class="error">Edit not found.<br><br><a class="back" href="${escapeHTML(homeHref())}">← Back to edits</a></div>`;
+      document.title = `Edit not found â€” ${CONFIG.handle || "@itneverbegunn"}`;
+      app.innerHTML = `<div class="error">Edit not found.<br><br><a class="back" href="${escapeHTML(homeHref())}">â† Back to edits</a></div>`;
       return;
     }
     renderEdit(edit);
