@@ -7,9 +7,8 @@ window.SITE_CONFIG = {
   handle: "@itneverbegunn",
   tiktokURL: "https://www.tiktok.com/@itneverbegunn",
 
-  // Paste the value IntenseDebate gives your registered site here once.
-  // Leave blank to hide the comments section completely.
-  intenseDebateAccountId: "",
+  // IntenseDebate site account ID
+  intenseDebateAccountId: "5d7f917fb33672c48d3d9f0a463d3123",
 
   goatCounterURL: "https://sainthamudidisciple.goatcounter.com/count",
   reactionNamespace: "itneverbegunn"
