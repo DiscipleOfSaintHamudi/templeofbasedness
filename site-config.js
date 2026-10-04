@@ -7,9 +7,13 @@ window.SITE_CONFIG = {
   handle: "@itneverbegunn",
   tiktokURL: "https://www.tiktok.com/@itneverbegunn",
 
-  // IntenseDebate site account ID
+  // IntenseDebate site account ID.
   intenseDebateAccountId: "5d7f917fb33672c48d3d9f0a463d3123",
 
+  // GoatCounter tracking endpoint. Visible counts are fetched through
+  // GoatCounter's JSON visitor-counter endpoint and rendered by this site.
   goatCounterURL: "https://sainthamudidisciple.goatcounter.com/count",
-  reactionNamespace: "itneverbegunn"
+
+  // Firebase Realtime Database used for shared arbitrary-Unicode reactions.
+  reactionDatabaseURL: "https://sainthamudi-default-rtdb.firebaseio.com/"
 };

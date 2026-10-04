@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "reactions": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

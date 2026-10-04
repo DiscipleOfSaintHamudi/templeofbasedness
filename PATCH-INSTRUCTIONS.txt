@@ -1,0 +1,8 @@
+Extract this ZIP over your existing repo folder:
+C:\Users\omarv\Downloads\itneverbegunn-autoedits-site-upgraded
+
+Your existing media/TFDxTFR.mp4 will NOT be deleted by extraction.
+
+Then run the PowerShell block provided by ChatGPT.
+
+IMPORTANT: In Firebase Realtime Database > Rules, reactions need public read/write access for anonymous community reactions. firebase-rules.json contains the rule block to paste into Firebase.

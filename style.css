@@ -24,34 +24,56 @@ h1{margin:0 0 6px;font-size:25px;letter-spacing:-.3px}.bio{margin:0;font-size:14
 @media(max-width:520px){.page{width:min(100% - 16px,760px);padding-top:22px}.grid{gap:8px}.card-body{padding:9px}.card-actions{grid-template-columns:1fr}.reaction{flex:1 1 calc(50% - 9px)}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
-/* =========================================
-   INTENSEDEBATE - SIMPLE GUEST COMMENT FORM
-   Hide email + website fields
-   ========================================= */
+/* Community reactions: Discord/Teams-style picker, no zero-count placeholders */
+.reaction-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.reaction-heading h2{margin:0}.reaction-hint{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.reaction-bar{display:flex;align-items:flex-start;gap:9px}.reactions{display:flex;flex-wrap:wrap;gap:8px;min-width:0}.reaction{min-height:38px;min-width:58px;border:1px solid #303030;background:var(--soft);color:#fff;border-radius:999px;padding:7px 10px;cursor:pointer;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:6px}.reaction:hover{background:#2a2a2a;border-color:#444}.reaction.voted{border-color:#666;background:#2a2a2a}.reaction-emoji{font-size:19px;line-height:1}.reaction-count{font-size:13px;line-height:1}.reaction-add{width:38px;height:38px;flex:0 0 38px;border-radius:50%;border:1px solid #343434;background:#1d1d1d;color:#ddd;font-size:24px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}.reaction-add:hover,.reaction-add.open{background:#2a2a2a;color:#fff;border-color:#555}.reaction-picker{margin-top:10px;padding:12px;background:#0b0b0b;border:1px solid #2a2a2a;border-radius:14px;max-height:330px;overflow:auto;box-shadow:0 16px 40px rgba(0,0,0,.45)}.reaction-picker[hidden]{display:none!important}.reaction-picker-group+.reaction-picker-group{margin-top:14px}.reaction-picker-title{font-size:11px;font-weight:800;color:#777;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px}.reaction-picker-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}.reaction-choice{aspect-ratio:1;border:1px solid transparent;background:transparent;border-radius:9px;color:#fff;font-size:23px;cursor:pointer;display:grid;place-items:center;padding:3px}.reaction-choice:hover,.reaction-choice:focus-visible{background:#222;border-color:#333}.reaction-choice.voted{background:#202020;border-color:#555}.reaction-choice[disabled],.reaction[disabled]{opacity:.5;cursor:wait}
+@media(max-width:520px){.reaction-bar{align-items:flex-start}.reaction{min-width:54px;flex:0 0 auto}.reaction-picker{max-height:300px}.reaction-picker-grid{grid-template-columns:repeat(6,minmax(0,1fr))}.reaction-choice{font-size:22px}}
 
-/* Hide email field */
-#IDCommentNewThreadEmail,
-#IDCommentNewThreadEmailLabel,
-input[name="email"],
-label[for="IDCommentNewThreadEmail"] {
-  display: none !important;
-}
+/* =========================================================
+   COMMUNITY REACTIONS v2
+   Full Unicode emoji picker + only non-zero shared reactions
+   ========================================================= */
+.reaction-picker{padding:0;overflow:hidden;max-height:none;background:#0b0b0b}
+.unicode-emoji-picker{width:min(100%,420px);height:420px;display:block;--background:#0b0b0b;--border-color:#2a2a2a;--input-border-color:#333;--input-font-color:#fff;--input-placeholder-color:#777;--outline-color:#666;--category-font-color:#aaa;--indicator-color:#fff;--button-hover-background:#222}
+@media(max-width:520px){.unicode-emoji-picker{width:100%;height:360px}.reaction-picker{width:100%}}
 
-/* Hide website / URL field */
-#IDCommentNewThreadURL,
-#IDCommentNewThreadURLLabel,
-input[name="url"],
-input[name="website"],
-label[for="IDCommentNewThreadURL"] {
-  display: none !important;
-}
+/* IntenseDebate guest form cleanup. IntenseDebate documents that site CSS can
+   override its form when scoped through #idc-container-parent/#idc-container. */
+#idc-container-parent #idc-container input[type="email"],
+#idc-container-parent #idc-container input[id*="email" i],
+#idc-container-parent #idc-container input[name*="email" i],
+#idc-container-parent #idc-container input[id*="website" i],
+#idc-container-parent #idc-container input[name*="website" i],
+#idc-container-parent #idc-container input[id*="url" i],
+#idc-container-parent #idc-container input[name*="url" i],
+#idc-container-parent #idc-container label[for*="email" i],
+#idc-container-parent #idc-container label[for*="website" i],
+#idc-container-parent #idc-container label[for*="url" i]{display:none!important}
 
-/* Hide surrounding rows/containers if IntenseDebate wraps them */
-#IDCommentNewThreadEmailContainer,
-#IDCommentNewThreadURLContainer,
-.idc-email,
-.idc-url,
-.idc-website {
-  display: none !important;
-}
+/* Modern browsers: remove simple wrapper rows too, not just the controls. */
+#idc-container-parent #idc-container :is(p,li,.idc-text,.idc-field,.idc-input):has(> input[type="email"]),
+#idc-container-parent #idc-container :is(p,li,.idc-text,.idc-field,.idc-input):has(> input[id*="website" i]),
+#idc-container-parent #idc-container :is(p,li,.idc-text,.idc-field,.idc-input):has(> input[name*="website" i]),
+#idc-container-parent #idc-container :is(p,li,.idc-text,.idc-field,.idc-input):has(> input[id*="url" i]),
+#idc-container-parent #idc-container :is(p,li,.idc-text,.idc-field,.idc-input):has(> input[name*="url" i]){display:none!important}
 
+/* =========================================================
+   FINAL UI PATCH v6
+   ========================================================= */
+.stats{display:inline-flex;align-items:center;gap:.45rem;padding:.42rem .68rem;border-radius:999px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);color:rgba(255,255,255,.84);font-size:13px;font-weight:700;margin-bottom:14px;min-height:34px}
+.view-icon{opacity:.72;font-size:14px}
+.picker-loading{padding:18px;color:var(--muted);font-size:13px;text-align:center}
+.emoji-fallback{padding:14px}.emoji-fallback label{display:block;color:#aaa;font-size:12px;font-weight:700;margin-bottom:8px}.emoji-fallback-row{display:flex;gap:8px}.emoji-fallback-row input{min-width:0;flex:1;background:#151515;border:1px solid #333;color:#fff;border-radius:10px;padding:10px 12px;font-size:20px}.emoji-fallback-row button{border:1px solid #3b3b3b;background:#242424;color:#fff;border-radius:10px;padding:8px 14px;font-weight:800;cursor:pointer}.emoji-fallback-row button:hover{background:#303030}
+.comments-section{overflow:hidden}
+#idc-container-parent #idc-container input[type="email"],
+#idc-container-parent #idc-container input[id*="email" i],
+#idc-container-parent #idc-container input[name*="email" i],
+#idc-container-parent #idc-container input[placeholder*="email" i],
+#idc-container-parent #idc-container input[id*="website" i],
+#idc-container-parent #idc-container input[name*="website" i],
+#idc-container-parent #idc-container input[placeholder*="website" i],
+#idc-container-parent #idc-container input[id*="url" i],
+#idc-container-parent #idc-container input[name*="url" i],
+#idc-container-parent #idc-container input[placeholder*="url" i],
+#idc-container-parent #idc-container label[for*="email" i],
+#idc-container-parent #idc-container label[for*="website" i],
+#idc-container-parent #idc-container label[for*="url" i]{display:none!important}
