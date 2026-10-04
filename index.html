@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="@itneverbegunn edits archive">
+  <meta name="theme-color" content="#080808">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:title" content="@itneverbegunn">
+  <meta property="og:description" content="@itneverbegunn edits archive">
+  <meta property="og:type" content="website">
+  <title>@itneverbegunn</title>
+  <link rel="stylesheet" href="style.css?v=20261004-3">
+</head>
+<body>
+  <main class="page">
+    <section class="profile">
+      <div class="pfp" aria-label="Profile picture">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="34" r="20" fill="currentColor"></circle>
+          <path d="M17 90c3-23 16-34 33-34s30 11 33 34" fill="currentColor"></path>
+        </svg>
+      </div>
+      <h1>@itneverbegunn</h1>
+      <p class="bio">edits • archive • downloads</p>
+    </section>
+
+    <section class="top-links" aria-label="Social links">
+      <a class="top-link" href="https://www.tiktok.com/@itneverbegunn" target="_blank" rel="noopener noreferrer">TikTok</a>
+    </section>
+
+    <section id="app"><div class="loading">loading edits…</div></section>
+    <footer>© 2026 @itneverbegunn</footer>
+  </main>
+
+  <script src="site-config.js?v=20261004-3"></script>
+
+  <script>
+    // Stable GoatCounter path: ignore build/cache-busting query parameters.
+    (function () {
+      var cleanPath = function () {
+        var u = new URL(window.location.href);
+        var edit = u.searchParams.get("edit");
+        return edit ? u.pathname + "?edit=" + encodeURIComponent(edit) : u.pathname;
+      };
+      window.goatcounter = { path: cleanPath };
+    })();
+  </script>
+  <script
+    data-goatcounter="https://sainthamudidisciple.goatcounter.com/count"
+    src="https://gc.zgo.at/count.v5.js"
+    crossorigin="anonymous"
+    integrity="sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ"
+    async
+    onload="window.dispatchEvent(new Event('goatcounter-ready'))">
+  </script>
+
+  <script src="site.js?v=20261004-3"></script>
+</body>
+</html>
