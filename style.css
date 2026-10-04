@@ -77,3 +77,6 @@ h1{margin:0 0 6px;font-size:25px;letter-spacing:-.3px}.bio{margin:0;font-size:14
 #idc-container-parent #idc-container label[for*="email" i],
 #idc-container-parent #idc-container label[for*="website" i],
 #idc-container-parent #idc-container label[for*="url" i]{display:none!important}
+
+/* v9: ASCII-safe UI icons and stable labels */
+.back{display:inline-flex;align-items:center;gap:7px}.ui-icon{width:16px;height:16px;flex:0 0 16px}.stats{white-space:nowrap}.view-icon{width:16px;height:16px;flex:0 0 16px;opacity:.72}.download{display:flex;align-items:center;justify-content:center;gap:8px}.download-icon{width:17px;height:17px;flex:0 0 17px}
