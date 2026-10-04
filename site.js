@@ -32,6 +32,10 @@ function getEditFile(edit) {
   return normalizePath(edit.file || `media/${edit.id}.mp4`);
 }
 
+function getEditPreview(edit) {
+  return normalizePath(edit.preview || getEditFile(edit));
+}
+
 function getEditTitle(edit) {
   return String(edit.title || edit.id);
 }
@@ -112,7 +116,7 @@ function updatePageMeta(edit) {
     return;
   }
 
-  const title = `${getEditTitle(edit)} â€” ${handle}`;
+  const title = `${getEditTitle(edit)} — ${handle}`;
   const description = edit.description || `${getEditTitle(edit)} by ${handle}`;
   const url = canonicalEditURL(edit.id);
   document.title = title;
@@ -148,7 +152,7 @@ async function loadEdits() {
 
 /* ---------- media helpers ---------- */
 function mediaErrorMarkup(message = "Video unavailable") {
-  return `<div class="media-error" role="status"><span>âš </span>${escapeHTML(message)}</div>`;
+  return `<div class="media-error" role="status"><span>⚠</span>${escapeHTML(message)}</div>`;
 }
 
 function bindMediaErrors(root = document) {
@@ -184,16 +188,17 @@ function renderHome() {
   const cards = EDITS.map((edit, index) => {
     const href = editHref(edit.id);
     const file = getEditFile(edit);
+    const preview = getEditPreview(edit);
     const title = getEditTitle(edit);
     const poster = edit.poster
-      ? `<img src="${escapeHTML(edit.poster)}" data-poster data-video-src="${escapeHTML(file)}" alt="${escapeHTML(title)} thumbnail" loading="lazy" decoding="async">`
-      : `<video muted playsinline preload="metadata" aria-hidden="true"><source src="${escapeHTML(file)}" type="video/mp4"></video>`;
+      ? `<img src="${escapeHTML(edit.poster)}" data-poster data-video-src="${escapeHTML(preview)}" alt="${escapeHTML(title)} thumbnail" loading="lazy" decoding="async">`
+      : `<video muted playsinline preload="metadata" aria-hidden="true"><source src="${escapeHTML(preview)}" type="video/mp4"></video>`;
 
     return `
       <article class="card">
         <a class="card-media" href="${escapeHTML(href)}" aria-label="Open ${escapeHTML(title)}">
           ${poster}
-          <span class="card-overlay" aria-hidden="true">â–¶</span>
+          <span class="card-overlay" aria-hidden="true">▶</span>
         </a>
         <div class="card-body">
           <div class="card-title">${escapeHTML(title)}</div>
@@ -220,13 +225,14 @@ function renderHome() {
 function renderEdit(edit) {
   const app = document.getElementById("app");
   const file = getEditFile(edit);
+  const preview = getEditPreview(edit);
   const title = getEditTitle(edit);
   const commentsEnabled = Boolean(String(CONFIG.intenseDebateAccountId || "").trim());
   const editIndex = Math.max(0, EDITS.findIndex(item => item.id === edit.id));
   updatePageMeta(edit);
 
   app.innerHTML = `
-    <a class="back" href="${escapeHTML(homeHref())}">â† Back to edits</a>
+    <a class="back" href="${escapeHTML(homeHref())}">← Back to edits</a>
 
     <article class="edit-card">
       <div class="edit-media">
@@ -238,8 +244,8 @@ function renderEdit(edit) {
       <div class="edit-info">
         <h2 class="edit-title">${escapeHTML(title)}</h2>
         <div class="edit-meta">${escapeHTML(getEditMeta(edit, editIndex))}</div>
-        <div class="stats" aria-label="View count"><span class="view-icon" aria-hidden="true">ðŸ‘</span><span id="view-count">â€”</span></div>
-        <a class="download" href="${escapeHTML(file)}" download="${escapeHTML(getDownloadName(edit))}">â†“ Download MP4</a>
+        <div class="stats" aria-label="View count"><span class="view-icon" aria-hidden="true">👁</span><span id="view-count">—</span></div>
+        <a class="download" href="${escapeHTML(file)}" download="${escapeHTML(getDownloadName(edit))}">↓ Download MP4</a>
       </div>
     </article>
 
@@ -259,7 +265,7 @@ function renderEdit(edit) {
     ${commentsEnabled ? `
       <section class="section comments-section" id="comments-section">
         <h2>Comments</h2>
-        <div class="comments-loading" id="comments-placeholder">loading commentsâ€¦</div>
+        <div class="comments-loading" id="comments-placeholder">loading comments…</div>
         <span id="IDCommentsPostTitle" style="display:none"></span>
       </section>` : ""}
   `;
@@ -298,7 +304,7 @@ async function fetchGoatCounterCount(path) {
 async function initVisibleViews(edit) {
   const holder = document.getElementById("view-count");
   if (!holder) return;
-  holder.textContent = "â€¦";
+  holder.textContent = "…";
 
   // Give count.js a moment to record this pageview before reading the public counter.
   await new Promise(resolve => setTimeout(resolve, 900));
@@ -525,7 +531,7 @@ function renderEmojiFallback(picker) {
     <div class="emoji-fallback">
       <label for="emoji-fallback-input">Paste any Unicode emoji</label>
       <div class="emoji-fallback-row">
-        <input id="emoji-fallback-input" type="text" inputmode="text" maxlength="40" autocomplete="off" placeholder="ðŸ¦…">
+        <input id="emoji-fallback-input" type="text" inputmode="text" maxlength="40" autocomplete="off" placeholder="🦅">
         <button id="emoji-fallback-submit" type="button">Add</button>
       </div>
     </div>`;
@@ -555,7 +561,7 @@ async function openReactionPicker() {
   add.setAttribute("aria-expanded", "true");
 
   if (picker.querySelector("emoji-picker, .emoji-fallback")) return;
-  picker.innerHTML = `<div class="picker-loading">loading emoji pickerâ€¦</div>`;
+  picker.innerHTML = `<div class="picker-loading">loading emoji picker…</div>`;
 
   const loaded = await ensureEmojiPickerModule();
   if (!loaded) {
@@ -736,8 +742,8 @@ async function boot() {
 
     const edit = EDITS.find(item => item.id === requestedId);
     if (!edit) {
-      document.title = `Edit not found â€” ${CONFIG.handle || "@itneverbegunn"}`;
-      app.innerHTML = `<div class="error">Edit not found.<br><br><a class="back" href="${escapeHTML(homeHref())}">â† Back to edits</a></div>`;
+      document.title = `Edit not found — ${CONFIG.handle || "@itneverbegunn"}`;
+      app.innerHTML = `<div class="error">Edit not found.<br><br><a class="back" href="${escapeHTML(homeHref())}">← Back to edits</a></div>`;
       return;
     }
     renderEdit(edit);
